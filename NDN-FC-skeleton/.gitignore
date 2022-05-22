@@ -1,0 +1,9 @@
+.DS*
+.waf-1*
+.waf-*-*/
+.waf3-*
+.lock*
+/build
+!/build/clientyolo.py
+!/build/*.jpg
+.vscode
