@@ -4,16 +4,13 @@ set -ex
 if [[ $JOB_NAME == *"code-coverage" ]]; then
     # Generate an XML report (Cobertura format) and a detailed HTML report using gcovr
     # Note: trailing slashes are important in the paths below. Do not remove them!
-    gcovr --object-directory build \
-          --filter ndn-cxx/ \
-          --exclude ndn-cxx/detail/nonstd/ \
-          --exclude-throw-branches \
-          --exclude-unreachable-branches \
-          --cobertura build/coverage.xml \
-          --html-details build/gcovr/ \
-          --print-summary
+    gcovr --object-directory=build \
+          --output=build/coverage.xml \
+          --exclude="$PWD/(examples|tests)" \
+          --root=. \
+          --xml
 
-    # Generate a detailed HTML report using lcov
+    # Generate also a detailed HTML output, but using lcov (better results)
     lcov --quiet \
          --capture \
          --directory . \

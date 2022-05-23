@@ -3,13 +3,13 @@ set -ex
 
 if has OSX $NODE_LABELS; then
     FORMULAE=(boost openssl pkg-config)
-    if [[ $JOB_NAME == *"Docs" ]]; then
-        FORMULAE+=(doxygen graphviz)
+    if has OSX-10.13 $NODE_LABELS || has OSX-10.14 $NODE_LABELS; then
+        FORMULAE+=(python)
     fi
 
-    if [[ -n $GITHUB_ACTIONS ]]; then
-        # GitHub Actions runners have a large number of pre-installed
-        # Homebrew packages. Don't waste time upgrading all of them.
+    if [[ -n $TRAVIS ]]; then
+        # Travis images come with a large number of pre-installed
+        # brew packages, don't waste time upgrading all of them
         brew list --versions "${FORMULAE[@]}" || brew update
         for FORMULA in "${FORMULAE[@]}"; do
             brew list --versions "$FORMULA" || brew install "$FORMULA"
@@ -31,6 +31,10 @@ elif has Ubuntu $NODE_LABELS; then
     sudo apt-get -qq update
     sudo apt-get -qy install build-essential pkg-config python3-minimal \
                              libboost-all-dev libssl-dev libsqlite3-dev
+
+    if [[ $JOB_NAME == *"code-coverage" ]]; then
+        sudo apt-get -qy install gcovr lcov
+    fi
 
     case $JOB_NAME in
         *code-coverage)
