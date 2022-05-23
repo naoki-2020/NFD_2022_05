@@ -414,7 +414,7 @@ Interest::removeHeadFunction() const
         str.erase(1, str.length()-1); //only one function header
       }
     }
-    this->setFunction(Name(str));
+    this->setFunction(Function(str));
 
 }
 
