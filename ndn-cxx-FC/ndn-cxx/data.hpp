@@ -135,6 +135,26 @@ public: // Data fields
   Data&
   setName(const Name& name);
 
+  const Function&
+  getFunction() const
+  {
+    return m_function;
+  }
+  void
+  setFunction(const Function& function) const
+  {
+    m_function = function;
+    m_wire.reset();
+  }
+  bool
+  hasFunction() const
+  {
+    return m_function.toUri() != "/" ? true : false;
+  }
+
+  unique_ptr<Name>
+  getNameFunction() const;
+
   /** @brief Get MetaInfo
    */
   const MetaInfo&

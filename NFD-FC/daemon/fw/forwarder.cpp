@@ -92,14 +92,14 @@ void
 Forwarder::onIncomingInterest(const Interest& interest, const FaceEndpoint& ingress)
 {
   // receive Interest
-  NFD_LOG_DEBUG("onIncomingInterest in=" << ingress << " interest=" << interest.getName());
+  NFD_LOG_DEBUG("onIncomingInterest in=" << ingress << " interest=" << *(interest.getNameFunction()));
   interest.setTag(make_shared<lp::IncomingFaceIdTag>(ingress.face.getId()));
   ++m_counters.nInInterests;
 
   // drop if HopLimit zero, decrement otherwise (if present)
   if (interest.getHopLimit()) {
     if (*interest.getHopLimit() == 0) {
-      NFD_LOG_DEBUG("onIncomingInterest in=" << ingress << " interest=" << interest.getName()
+      NFD_LOG_DEBUG("onIncomingInterest in=" << ingress << " interest=" << *(interest.getNameFunction()
                     << " hop-limit=0");
       ++ingress.face.getCounters().nInHopLimitZero;
       // drop
@@ -130,7 +130,7 @@ Forwarder::onIncomingInterest(const Interest& interest, const FaceEndpoint& ingr
   if (!interest.getForwardingHint().empty() &&
       m_networkRegionTable.isInProducerRegion(interest.getForwardingHint())) {
     NFD_LOG_DEBUG("onIncomingInterest in=" << ingress
-                  << " interest=" << interest.getName() << " reaching-producer-region");
+                  << " interest=" << *(interest.getNameFunction()) << " reaching-producer-region");
     const_cast<Interest&>(interest).setForwardingHint({});
   }
 
@@ -167,11 +167,11 @@ Forwarder::onInterestLoop(const Interest& interest, const FaceEndpoint& ingress)
   // if multi-access or ad hoc face, drop
   if (ingress.face.getLinkType() != ndn::nfd::LINK_TYPE_POINT_TO_POINT) {
     NFD_LOG_DEBUG("onInterestLoop in=" << ingress
-                  << " interest=" << interest.getName() << " drop");
+                  << " interest=" << *interest.getNameFunction()) << " drop");
     return;
   }
 
-  NFD_LOG_DEBUG("onInterestLoop in=" << ingress << " interest=" << interest.getName()
+  NFD_LOG_DEBUG("onInterestLoop in=" << ingress << " interest=" << *(interest.getNameFunction())
                 << " send-Nack-duplicate");
 
   // send Nack with reason=DUPLICATE
@@ -228,7 +228,7 @@ void
 Forwarder::onContentStoreHit(const Interest& interest, const FaceEndpoint& ingress,
                              const shared_ptr<pit::Entry>& pitEntry, const Data& data)
 {
-  NFD_LOG_DEBUG("onContentStoreHit interest=" << interest.getName());
+  NFD_LOG_DEBUG("onContentStoreHit interest=" << *(interest.getNameFunction()));
   ++m_counters.nCsHits;
 
   data.setTag(make_shared<lp::IncomingFaceIdTag>(face::FACEID_CONTENT_STORE));
@@ -251,13 +251,13 @@ Forwarder::onOutgoingInterest(const Interest& interest, Face& egress,
 {
   // drop if HopLimit == 0 but sending on non-local face
   if (interest.getHopLimit() == 0 && egress.getScope() == ndn::nfd::FACE_SCOPE_NON_LOCAL) {
-    NFD_LOG_DEBUG("onOutgoingInterest out=" << egress.getId() << " interest=" << pitEntry->getName()
+    NFD_LOG_DEBUG("onOutgoingInterest out=" << egress.getId() << " interest=" << *(pitEntry->getNameFunction())
                   << " non-local hop-limit=0");
     ++egress.getCounters().nOutHopLimitZero;
     return nullptr;
   }
 
-  NFD_LOG_DEBUG("onOutgoingInterest out=" << egress.getId() << " interest=" << pitEntry->getName());
+  NFD_LOG_DEBUG("onOutgoingInterest out=" << egress.getId() << " interest=" << *(pitEntry->getNameFunction()));
 
   // insert out-record
   auto it = pitEntry->insertOrUpdateOutRecord(egress, interest);
@@ -272,7 +272,7 @@ Forwarder::onOutgoingInterest(const Interest& interest, Face& egress,
 void
 Forwarder::onInterestFinalize(const shared_ptr<pit::Entry>& pitEntry)
 {
-  NFD_LOG_DEBUG("onInterestFinalize interest=" << pitEntry->getName()
+  NFD_LOG_DEBUG("onInterestFinalize interest=" << *(pitEntry->getNameFunction())
                 << (pitEntry->isSatisfied ? " satisfied" : " unsatisfied"));
 
   // Dead Nonce List insert if necessary
@@ -295,7 +295,7 @@ void
 Forwarder::onIncomingData(const Data& data, const FaceEndpoint& ingress)
 {
   // receive Data
-  NFD_LOG_DEBUG("onIncomingData in=" << ingress << " data=" << data.getName());
+  NFD_LOG_DEBUG("onIncomingData in=" << ingress << " data=" << *(data.getNameFunction()));
   data.setTag(make_shared<lp::IncomingFaceIdTag>(ingress.face.getId()));
   ++m_counters.nInData;
 
@@ -323,7 +323,7 @@ Forwarder::onIncomingData(const Data& data, const FaceEndpoint& ingress)
   if (pitMatches.size() == 1) {
     auto& pitEntry = pitMatches.front();
 
-    NFD_LOG_DEBUG("onIncomingData matching=" << pitEntry->getName());
+    NFD_LOG_DEBUG("onIncomingData matching=" << *(data->getNameFunction()));
 
     // set PIT expiry timer to now
     this->setExpiryTimer(pitEntry, 0_ms);
@@ -348,7 +348,7 @@ Forwarder::onIncomingData(const Data& data, const FaceEndpoint& ingress)
     auto now = time::steady_clock::now();
 
     for (const auto& pitEntry : pitMatches) {
-      NFD_LOG_DEBUG("onIncomingData matching=" << pitEntry->getName());
+      NFD_LOG_DEBUG("onIncomingData matching=" << *(data->getNameFunction()));
 
       // remember pending downstreams
       for (const pit::InRecord& inRecord : pitEntry->getInRecords()) {
@@ -397,7 +397,7 @@ Forwarder::onDataUnsolicited(const Data& data, const FaceEndpoint& ingress)
     m_cs.insert(data, true);
   }
 
-  NFD_LOG_DEBUG("onDataUnsolicited in=" << ingress << " data=" << data.getName()
+  NFD_LOG_DEBUG("onDataUnsolicited in=" << ingress << " data=" << *(data.getNameFunction())
                 << " decision=" << decision);
   ++m_counters.nUnsolicitedData;
 }
@@ -406,10 +406,10 @@ bool
 Forwarder::onOutgoingData(const Data& data, Face& egress)
 {
   if (egress.getId() == face::INVALID_FACEID) {
-    NFD_LOG_WARN("onOutgoingData out=(invalid) data=" << data.getName());
+    NFD_LOG_WARN("onOutgoingData out=(invalid) data=" << *(data.getNameFunction()));
     return false;
   }
-  NFD_LOG_DEBUG("onOutgoingData out=" << egress.getId() << " data=" << data.getName());
+  NFD_LOG_DEBUG("onOutgoingData out=" << egress.getId() << " data=" << *(data.getNameFunction()));
 
   // /localhost scope control
   bool isViolatingLocalhost = egress.getScope() == ndn::nfd::FACE_SCOPE_NON_LOCAL &&

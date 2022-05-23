@@ -31,7 +31,7 @@
 #include "ndn-cxx/util/time.hpp"
 
 #include <array>
-
+#include <memory>
 #include <boost/endian/conversion.hpp>
 
 namespace ndn {
@@ -161,12 +161,18 @@ public: // matching
   bool
   matchesData(const Data& data) const;
 
+  bool
+  matchesDataWFunction(const Data& data) const;
+
   /** @brief Check if this Interest matches @p other
    *
    *  Two Interests match if both have the same Name, CanBePrefix, and MustBeFresh.
    */
   bool
   matchesInterest(const Interest& other) const;
+
+  bool
+  matchesInterestWFunction(const Interest& other) const;
 
   void
   removeHeadFunction() const;
@@ -211,6 +217,10 @@ public: // element access
   {
     return m_canBePrefix;
   }
+  
+  unique_ptr<Name>
+  getNameFunction() const;
+
 
   /** @brief Add or remove CanBePrefix element.
    *  @param canBePrefix whether CanBePrefix element should be present.
