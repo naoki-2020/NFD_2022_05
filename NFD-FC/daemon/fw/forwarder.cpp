@@ -185,7 +185,7 @@ void
 Forwarder::onContentStoreMiss(const Interest& interest, const FaceEndpoint& ingress,
                               const shared_ptr<pit::Entry>& pitEntry)
 {
-  NFD_LOG_DEBUG("onContentStoreMiss interest=" << interest.getName());
+  NFD_LOG_DEBUG("onContentStoreMiss interest=" << *(interest.getNameFunction()));
   ++m_counters.nCsMisses;
 
   // attach HopLimit if configured and not present in Interest
