@@ -93,9 +93,7 @@ Interest::wireEncode(EncodingImpl<TAG>& encoder) const
     totalLength += prependBinaryBlock(encoder, tlv::HopLimit, {*m_hopLimit});
   }
 
-  //Function
-  totalLength += getFunction().wireEncode(encoder);
-
+  
   // InterestLifetime
   if (getInterestLifetime() != DEFAULT_INTEREST_LIFETIME) {
     totalLength += prependNonNegativeIntegerBlock(encoder, tlv::InterestLifetime,
@@ -130,6 +128,9 @@ Interest::wireEncode(EncodingImpl<TAG>& encoder) const
   totalLength += encoder.prependVarNumber(tlv::Interest);
   return totalLength;
 }
+
+//Function
+totalLength += getFunction().wireEncode(encoder);
 
 NDN_CXX_DEFINE_WIRE_ENCODE_INSTANTIATIONS(Interest);
 
@@ -183,6 +184,12 @@ Interest::wireDecode(const Block& wire)
     NDN_THROW(Error("Name has more than one ParametersSha256DigestComponent"));
   }
   m_name = std::move(tempName);
+
+  if (++element == m_wire.element_end() || element->type() != tlv::Name) {
+    NDN_THROW(Error("Function element is missing or out of order"));
+  }
+  Name tempFunction(*element);
+  m_function = std::move(tempFunction);
 
   m_canBePrefix = m_mustBeFresh = false;
   m_forwardingHint.clear();
@@ -274,32 +281,25 @@ Interest::wireDecode(const Block& wire)
         lastElement = 6;
         break;
       }
-      case tlv::FunctionLimit: {
-        if (lastElement >= 7) {
-           NDN_THROW(Error("Function element is out of order"));
-        }
-        m_function.wireDecode(*element);
-        lastElement = 7;
-        break;
-      }
+      
       case tlv::HopLimit: {
-        if (lastElement >= 8) {
+        if (lastElement >= 7) {
           break; // HopLimit is non-critical, ignore out-of-order appearance
         }
         if (element->value_size() != 1) {
           NDN_THROW(Error("HopLimit element is malformed"));
         }
         m_hopLimit = *element->value();
-        lastElement = 8;
+        lastElement = 7;
         break;
       }
       case tlv::ApplicationParameters: {
-        if (lastElement >= 9) {
+        if (lastElement >= 8) {
           break; // ApplicationParameters is non-critical, ignore out-of-order appearance
         }
         BOOST_ASSERT(!hasApplicationParameters());
         m_parameters.push_back(*element);
-        lastElement = 9;
+        lastElement = 8;
         break;
       }
       default: { // unrecognized element

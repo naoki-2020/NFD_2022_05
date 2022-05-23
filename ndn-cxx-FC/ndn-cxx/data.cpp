@@ -74,6 +74,9 @@ Data::wireEncode(EncodingImpl<TAG>& encoder, bool wantUnsignedPortionOnly) const
   // MetaInfo
   totalLength += m_metaInfo.wireEncode(encoder);
 
+  //Function
+  totalLength += m_function.wireEncode(encoder);
+
   // Name
   totalLength += m_name.wireEncode(encoder);
 
@@ -142,6 +145,12 @@ Data::wireDecode(const Block& wire)
     NDN_THROW(Error("Name element is missing or out of order"));
   }
   m_name.wireDecode(*element);
+
+   if (++element == m_wire.elements_end() || element->type() != tlv::Name) {
+     NDN_THROW(Error("Function element is missing or out of order"));
+   }
+   m_function.wireDecode(*element);
+
 
   m_metaInfo = {};
   m_content = {};
