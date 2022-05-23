@@ -525,7 +525,7 @@ private:
   static bool s_autoCheckParametersDigest;
 
   Name m_name;
-  mutable Function m_function("/");
+  mutable Function m_function;
   std::vector<Name> m_forwardingHint;
   mutable optional<Nonce> m_nonce;
   time::milliseconds m_interestLifetime = DEFAULT_INTEREST_LIFETIME;

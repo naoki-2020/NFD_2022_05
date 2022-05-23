@@ -361,7 +361,7 @@ protected:
 
 private:
   Name m_name;
-  mutable Function m_function("/");
+  mutable Function m_function;
   MetaInfo m_metaInfo;
   Block m_content;
   SignatureInfo m_signatureInfo;
