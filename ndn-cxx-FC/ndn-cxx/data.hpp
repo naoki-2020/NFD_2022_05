@@ -135,13 +135,13 @@ public: // Data fields
   Data&
   setName(const Name& name);
 
-  const Function&
+  const Name&
   getFunction() const
   {
     return m_function;
   }
   void
-  setFunction(const Function& function) const
+  setFunction(const Name& function) const
   {
     m_function = function;
     m_wire.reset();
@@ -360,6 +360,7 @@ protected:
 
 private:
   Name m_name;
+  mutable Name m_function;
   MetaInfo m_metaInfo;
   Block m_content;
   SignatureInfo m_signatureInfo;
