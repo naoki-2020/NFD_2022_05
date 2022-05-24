@@ -93,8 +93,6 @@ Interest::wireEncode(EncodingImpl<TAG>& encoder) const
     totalLength += prependBinaryBlock(encoder, tlv::HopLimit, {*m_hopLimit});
   }
 
-  //Function
-  totalLength += getFunction().wireEncode(encoder);
   
   // InterestLifetime
   if (getInterestLifetime() != DEFAULT_INTEREST_LIFETIME) {
@@ -125,6 +123,9 @@ Interest::wireEncode(EncodingImpl<TAG>& encoder) const
 
   // Name
   totalLength += getName().wireEncode(encoder);
+
+   //Function
+  totalLength += getFunction().wireEncode(encoder);
 
   totalLength += encoder.prependVarNumber(totalLength);
   totalLength += encoder.prependVarNumber(tlv::Interest);
@@ -183,6 +184,12 @@ Interest::wireDecode(const Block& wire)
     NDN_THROW(Error("Name has more than one ParametersSha256DigestComponent"));
   }
   m_name = std::move(tempName);
+
+  if (++element == m_wire.elements_end() || element->type() != tlv::Name) {
+    NDN_THROW(Error("Function element is missing or out of order"));
+  }
+  Name tempFunction(*element);
+  m_function = std::move(tempFunction);
 
   m_canBePrefix = m_mustBeFresh = false;
   m_forwardingHint.clear();
@@ -275,32 +282,24 @@ Interest::wireDecode(const Block& wire)
         break;
       }
       
-      case tlv::Function: {
-        if (lastElement >= 7) {
-          NDN_THROW(Error("Function element is out of order"));
-        }
-        m_function.wireDecode(*element);
-        lastElement = 7;
-        break;
-      }
       case tlv::HopLimit: {
-        if (lastElement >= 8) {
+        if (lastElement >= 7) {
           break; // HopLimit is non-critical, ignore out-of-order appearance
         }
         if (element->value_size() != 1) {
           NDN_THROW(Error("HopLimit element is malformed"));
         }
         m_hopLimit = *element->value();
-        lastElement = 8;
+        lastElement = 7;
         break;
       }
       case tlv::ApplicationParameters: {
-        if (lastElement >= 9) {
+        if (lastElement >= 8) {
           break; // ApplicationParameters is non-critical, ignore out-of-order appearance
         }
         BOOST_ASSERT(!hasApplicationParameters());
         m_parameters.push_back(*element);
-        lastElement = 9;
+        lastElement = 8;
         break;
       }
       default: { // unrecognized element
@@ -414,7 +413,7 @@ Interest::removeHeadFunction() const
         str.erase(1, str.length()-1); //only one function header
       }
     }
-    this->setFunction(Function(str));
+    this->setFunction(Name(str));
 
 }
 
