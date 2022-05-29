@@ -76,7 +76,7 @@ Data::wireEncode(EncodingImpl<TAG>& encoder, bool wantUnsignedPortionOnly) const
   totalLength += m_metaInfo.wireEncode(encoder);
 
   //Function
-  totalLength += m_Function().wireEncode(encoder);
+  totalLength += m_function.wireEncode(encoder);
 
   // Name
   totalLength += m_name.wireEncode(encoder);

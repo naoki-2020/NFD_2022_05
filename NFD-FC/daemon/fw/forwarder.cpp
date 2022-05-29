@@ -99,7 +99,7 @@ Forwarder::onIncomingInterest(const Interest& interest, const FaceEndpoint& ingr
   // drop if HopLimit zero, decrement otherwise (if present)
   if (interest.getHopLimit()) {
     if (*interest.getHopLimit() == 0) {
-      NFD_LOG_DEBUG("onIncomingInterest in=" << ingress << " interest=" << *(interest.getNameFunction()
+      NFD_LOG_DEBUG("onIncomingInterest in=" << ingress << " interest=" << *(interest.getNameFunction())
                     << " hop-limit=0");
       ++ingress.face.getCounters().nInHopLimitZero;
       // drop
