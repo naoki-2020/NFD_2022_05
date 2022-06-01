@@ -37,7 +37,6 @@ const time::milliseconds FunctionChainStrategy::RETX_SUPPRESSION_INITIAL(10);
 const time::milliseconds FunctionChainStrategy::RETX_SUPPRESSION_MAX(250);
 
 FunctionChainStrategy::FunctionChainStrategy(Forwarder& forwarder, const Name& name)
-
   : Strategy(forwarder)
   , ProcessNackTraits(this)
   , m_retxSuppression(RETX_SUPPRESSION_INITIAL,

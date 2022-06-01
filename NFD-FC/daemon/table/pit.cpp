@@ -67,7 +67,7 @@ Pit::findOrInsert(const Interest& interest, bool allowInsert)
   auto it = std::find_if(pitEntries.begin(), pitEntries.end(),
     [&interest, nteDepth] (const shared_ptr<Entry>& entry) {
       // NameTree guarantees first nteDepth components are equal
-      return entry->canMatchFunction(interest, nteDepth);
+      return entry->canMatchWFunction(interest, nteDepth);
     });
   if (it != pitEntries.end()) {
     return {*it, false};

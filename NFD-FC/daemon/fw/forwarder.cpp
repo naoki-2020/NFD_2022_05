@@ -167,7 +167,7 @@ Forwarder::onInterestLoop(const Interest& interest, const FaceEndpoint& ingress)
   // if multi-access or ad hoc face, drop
   if (ingress.face.getLinkType() != ndn::nfd::LINK_TYPE_POINT_TO_POINT) {
     NFD_LOG_DEBUG("onInterestLoop in=" << ingress
-                  << " interest=" << *interest.getNameFunction()) << " drop");
+                  << " interest=" << *(interest.getNameFunction()) << " drop");
     return;
   }
 
@@ -323,7 +323,7 @@ Forwarder::onIncomingData(const Data& data, const FaceEndpoint& ingress)
   if (pitMatches.size() == 1) {
     auto& pitEntry = pitMatches.front();
 
-    NFD_LOG_DEBUG("onIncomingData matching=" << *(data->getNameFunction()));
+    NFD_LOG_DEBUG("onIncomingData matching=" << *(data.getNameFunction()));
 
     // set PIT expiry timer to now
     this->setExpiryTimer(pitEntry, 0_ms);
@@ -348,7 +348,7 @@ Forwarder::onIncomingData(const Data& data, const FaceEndpoint& ingress)
     auto now = time::steady_clock::now();
 
     for (const auto& pitEntry : pitMatches) {
-      NFD_LOG_DEBUG("onIncomingData matching=" << *(data->getNameFunction()));
+      NFD_LOG_DEBUG("onIncomingData matching=" << *(data.getNameFunction()));
 
       // remember pending downstreams
       for (const pit::InRecord& inRecord : pitEntry->getInRecords()) {
