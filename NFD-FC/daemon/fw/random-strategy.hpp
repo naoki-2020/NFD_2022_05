@@ -48,11 +48,11 @@ public:
 
 public: // triggers
   void
-  afterReceiveInterest(const Interest& interest, const FaceEndpoint& ingress,
+  afterReceiveInterest(const FaceEndpoint& ingress,const Interest& interest, 
                        const shared_ptr<pit::Entry>& pitEntry) override;
 
   void
-  afterReceiveNack(const lp::Nack& nack, const FaceEndpoint& ingress,
+  afterReceiveNack( const FaceEndpoint& ingress,const lp::Nack& nack,
                    const shared_ptr<pit::Entry>& pitEntry) override;
 
 private:

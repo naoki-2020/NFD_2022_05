@@ -59,7 +59,7 @@ BestRouteStrategy::getStrategyName()
 }
 
 void
-BestRouteStrategy::afterReceiveInterest(const Interest& interest, const FaceEndpoint& ingress,
+BestRouteStrategy::afterReceiveInterest(const FaceEndpoint& ingress, const Interest& interest,
                                         const shared_ptr<pit::Entry>& pitEntry)
 {
   RetxSuppressionResult suppression = m_retxSuppression->decidePerPitEntry(*pitEntry);
@@ -120,7 +120,7 @@ BestRouteStrategy::afterReceiveInterest(const Interest& interest, const FaceEndp
 }
 
 void
-BestRouteStrategy::afterReceiveNack(const lp::Nack& nack, const FaceEndpoint& ingress,
+BestRouteStrategy::afterReceiveNack(const FaceEndpoint& ingress, const lp::Nack& nack, 
                                     const shared_ptr<pit::Entry>& pitEntry)
 {
   this->processNack(nack, ingress.face, pitEntry);

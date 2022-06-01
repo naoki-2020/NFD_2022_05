@@ -57,7 +57,7 @@ RandomStrategy::getStrategyName()
 }
 
 void
-RandomStrategy::afterReceiveInterest(const Interest& interest, const FaceEndpoint& ingress,
+RandomStrategy::afterReceiveInterest( const FaceEndpoint& ingress,const Interest& interest,
                                      const shared_ptr<pit::Entry>& pitEntry)
 {
   const fib::Entry& fibEntry = this->lookupFib(*pitEntry);
@@ -81,7 +81,7 @@ RandomStrategy::afterReceiveInterest(const Interest& interest, const FaceEndpoin
 }
 
 void
-RandomStrategy::afterReceiveNack(const lp::Nack& nack, const FaceEndpoint& ingress,
+RandomStrategy::afterReceiveNack( const FaceEndpoint& ingress, const lp::Nack& nack,
                                  const shared_ptr<pit::Entry>& pitEntry)
 {
   this->processNack(nack, ingress.face, pitEntry);

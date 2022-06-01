@@ -59,7 +59,7 @@ MulticastStrategy::getStrategyName()
 }
 
 void
-MulticastStrategy::afterReceiveInterest(const Interest& interest, const FaceEndpoint& ingress,
+MulticastStrategy::afterReceiveInterest( const FaceEndpoint& ingress,const Interest& interest,
                                         const shared_ptr<pit::Entry>& pitEntry)
 {
   const fib::Entry& fibEntry = this->lookupFib(*pitEntry);

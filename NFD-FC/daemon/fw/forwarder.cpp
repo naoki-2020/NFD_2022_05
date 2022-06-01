@@ -221,7 +221,7 @@ Forwarder::onContentStoreMiss(const Interest& interest, const FaceEndpoint& ingr
 
   // dispatch to strategy: after receive Interest
   m_strategyChoice.findEffectiveStrategy(*pitEntry)
-    .afterReceiveInterest(interest, FaceEndpoint(ingress.face, 0), pitEntry);
+    .afterReceiveInterest(FaceEndpoint(ingress.face, 0), interest, pitEntry);
 }
 
 void
@@ -483,7 +483,7 @@ Forwarder::onIncomingNack(const lp::Nack& nack, const FaceEndpoint& ingress)
   }
 
   // trigger strategy: after receive NACK
-  m_strategyChoice.findEffectiveStrategy(*pitEntry).afterReceiveNack(nack, ingress, pitEntry);
+  m_strategyChoice.findEffectiveStrategy(*pitEntry).afterReceiveNack(ingress, nack,  pitEntry);
 }
 
 bool

@@ -146,7 +146,7 @@ public: // triggers
    *          construct and keep a weak_ptr to \p pitEntry.
    */
   virtual void
-  afterReceiveInterest(const Interest& interest, const FaceEndpoint& ingress,
+  afterReceiveInterest(const FaceEndpoint& ingress, const Interest& interest,
                        const shared_ptr<pit::Entry>& pitEntry) = 0;
 
   /**
@@ -245,7 +245,7 @@ public: // triggers
    *          construct and keep a weak_ptr to \p pitEntry.
    */
   virtual void
-  afterReceiveNack(const lp::Nack& nack, const FaceEndpoint& ingress,
+  afterReceiveNack(const FaceEndpoint& ingress,const lp::Nack& nack, 
                    const shared_ptr<pit::Entry>& pitEntry);
 
   /**

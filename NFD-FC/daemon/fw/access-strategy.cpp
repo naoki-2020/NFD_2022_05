@@ -57,7 +57,7 @@ AccessStrategy::getStrategyName()
 }
 
 void
-AccessStrategy::afterReceiveInterest(const Interest& interest, const FaceEndpoint& ingress,
+AccessStrategy::afterReceiveInterest(const FaceEndpoint& ingress,const Interest& interest,
                                      const shared_ptr<pit::Entry>& pitEntry)
 {
   auto suppressResult = m_retxSuppression.decidePerPitEntry(*pitEntry);

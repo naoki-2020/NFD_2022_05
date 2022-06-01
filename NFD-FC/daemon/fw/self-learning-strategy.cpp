@@ -66,7 +66,7 @@ SelfLearningStrategy::getStrategyName()
 }
 
 void
-SelfLearningStrategy::afterReceiveInterest(const Interest& interest, const FaceEndpoint& ingress,
+SelfLearningStrategy::afterReceiveInterest(const FaceEndpoint& ingress,const Interest& interest, 
                                            const shared_ptr<pit::Entry>& pitEntry)
 {
   const fib::Entry& fibEntry = this->lookupFib(*pitEntry);
@@ -130,7 +130,7 @@ SelfLearningStrategy::afterReceiveData(const Data& data, const FaceEndpoint& ing
 }
 
 void
-SelfLearningStrategy::afterReceiveNack(const lp::Nack& nack, const FaceEndpoint& ingress,
+SelfLearningStrategy::afterReceiveNack( const FaceEndpoint& ingress,const lp::Nack& nack,
                                        const shared_ptr<pit::Entry>& pitEntry)
 {
   NFD_LOG_DEBUG("Nack for " << nack.getInterest() << " from=" << ingress

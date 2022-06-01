@@ -203,7 +203,7 @@ Strategy::afterReceiveData(const Data& data, const FaceEndpoint& ingress,
 }
 
 void
-Strategy::afterReceiveNack(const lp::Nack&, const FaceEndpoint& ingress,
+Strategy::afterReceiveNack(const FaceEndpoint& ingress,const lp::Nack&, 
                            const shared_ptr<pit::Entry>& pitEntry)
 {
   NFD_LOG_DEBUG("afterReceiveNack in=" << ingress << " pitEntry=" << pitEntry->getName());
