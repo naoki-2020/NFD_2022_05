@@ -68,7 +68,7 @@ AsfStrategy::getStrategyName()
 }
 
 void
-AsfStrategy::afterReceiveInterest(const Interest& interest, const FaceEndpoint& ingress,
+AsfStrategy::afterReceiveInterest(const FaceEndpoint& ingress, const Interest& interest,
                                   const shared_ptr<pit::Entry>& pitEntry)
 {
   const auto& fibEntry = this->lookupFib(*pitEntry);
@@ -168,7 +168,7 @@ AsfStrategy::beforeSatisfyInterest(const Data& data, const FaceEndpoint& ingress
 }
 
 void
-AsfStrategy::afterReceiveNack(const lp::Nack& nack, const FaceEndpoint& ingress,
+AsfStrategy::afterReceiveNack(const FaceEndpoint& ingress, const lp::Nack& nack,
                               const shared_ptr<pit::Entry>& pitEntry)
 {
   NFD_LOG_DEBUG(nack.getInterest() << " nack from=" << ingress << " reason=" << nack.getReason());

@@ -50,8 +50,8 @@ public:
 
   explicit
   RetxSuppressionExponential(Duration initialInterval = DEFAULT_INITIAL_INTERVAL,
-                             float multiplier = DEFAULT_MULTIPLIER,
-                             Duration maxInterval = DEFAULT_MAX_INTERVAL);
+                             Duration maxInterval = DEFAULT_MAX_INTERVAL,
+                             float multiplier = DEFAULT_MULTIPLIER);
 
   /** \brief determines whether Interest is a retransmission per pit entry
    *         and if so, whether it shall be forwarded or suppressed

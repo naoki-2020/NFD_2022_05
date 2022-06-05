@@ -40,8 +40,8 @@ FunctionChainStrategy::FunctionChainStrategy(Forwarder& forwarder, const Name& n
   : Strategy(forwarder)
   , ProcessNackTraits(this)
   , m_retxSuppression(RETX_SUPPRESSION_INITIAL,
-                      RetxSuppressionExponential::DEFAULT_MULTIPLIER,
-                      RETX_SUPPRESSION_MAX)
+                      RETX_SUPPRESSION_MAX,
+                      RetxSuppressionExponential::DEFAULT_MULTIPLIER)
   ,m_forwarder(forwarder)
 {
   ParsedInstanceName parsed = parseInstanceName(name);
@@ -87,7 +87,7 @@ FunctionChainStrategy::afterReceiveInterest(const FaceEndpoint& ingress, const I
 
       lp::NackHeader nackHeader;
       nackHeader.setReason(lp::NackReason::NO_ROUTE);
-      this->sendNack(pitEntry, ingress.face, nackHeader);
+      this->sendNack(nackHeader,ingress.face,pitEntry);
 
       this->rejectPendingInterest(pitEntry);
       return;
@@ -95,7 +95,7 @@ FunctionChainStrategy::afterReceiveInterest(const FaceEndpoint& ingress, const I
 
     Face& outFace = it->getFace();
     NFD_LOG_DEBUG(interest << " from=" << ingress << " newPitEntry-to=" << outFace.getId());
-    this->sendInterest(pitEntry, outFace, interest);
+    this->sendInterest(interest, outFace , pitEntry);
     return;
   }
 
@@ -107,7 +107,7 @@ FunctionChainStrategy::afterReceiveInterest(const FaceEndpoint& ingress, const I
 
   if (it != nexthops.end()) {
     Face& outFace = it->getFace();
-    this->sendInterest(pitEntry, outFace, interest);
+    this->sendInterest(interest, outFace ,pitEntry);
     NFD_LOG_DEBUG(interest << " from=" << ingress << " retransmit-unused-to=" << outFace.getId());
     return;
   }
@@ -119,7 +119,7 @@ FunctionChainStrategy::afterReceiveInterest(const FaceEndpoint& ingress, const I
   }
   else {
     Face& outFace = it->getFace();
-    this->sendInterest(pitEntry, outFace, interest);
+    this->sendInterest(interest ,  outFace , pitEntry);
     NFD_LOG_DEBUG(interest << " from=" << ingress << " retransmit-retry-to=" << outFace.getId());
   }
 }
@@ -128,7 +128,7 @@ void
 FunctionChainStrategy::afterReceiveNack(const FaceEndpoint& ingress, const lp::Nack& nack,
                                     const shared_ptr<pit::Entry>& pitEntry)
 {
-  this->processNack(ingress.face, nack, pitEntry);
+  this->processNack(nack, ingress.face, pitEntry);
 }
 
 const fib::Entry&
