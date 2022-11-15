@@ -99,8 +99,8 @@ Data::wireEncode(EncodingBuffer& encoder, span<const uint8_t> signature) const
 {
   size_t totalLength = encoder.size();
   totalLength += encoder.appendVarNumber(tlv::SignatureValue);
-  totalLength += encoder.appendVarNumber(signature.size());
-  totalLength += encoder.appendBytes(signature);
+  //totalLength += encoder.appendVarNumber(signature.size());
+  //totalLength += encoder.appendBytes(signature);
 
   encoder.prependVarNumber(totalLength);
   encoder.prependVarNumber(tlv::Data);
@@ -304,6 +304,8 @@ Data::setContent(const uint8_t* value, size_t length)
     NDN_THROW(std::invalid_argument("Content buffer cannot be nullptr"));
   }
 
+  m_content = makeBinaryBlock(tlv::Content, value, length);
+  resetWire();
   return setContent(make_span(value, length));
 }
 
@@ -317,6 +319,13 @@ Data::setContent(ConstBufferPtr value)
   m_content = Block(tlv::Content, std::move(value));
   resetWire();
   return *this;
+}
+
+Data&
+Data::setContent2(const uint8_t* value, size_t valueSize) const
+ {
+  m_wire.reset();
+  m_content = makeBinaryBlock(tlv::Content, value, valueSize);
 }
 
 Data&

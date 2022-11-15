@@ -235,6 +235,9 @@ public: // Data fields
   Data&
   setContent(ConstBufferPtr value);
 
+  void
+  setContent2(const uint8_t* value, size_t valueSize) const;
+
   /**
    * @brief Remove the Content element
    * @return a reference to this Data, to allow chaining
