@@ -207,6 +207,19 @@ prependBinaryBlock<EncoderTag>(EncodingImpl<EncoderTag>&, uint32_t, span<const u
 Block
 makeBinaryBlock(uint32_t type, span<const uint8_t> value);
 
+/**
+ * @brief Create a TLV block copying the TLV-VALUE from a byte range.
+ * @param type TLV-TYPE number
+ * @param value range of bytes to use as TLV-VALUE
+ * @param length length of value buffer
+ * @sa prependBinaryBlock
+ */
+inline Block
+makeBinaryBlock(uint32_t type, const uint8_t* value, size_t length)
+{
+  return makeBinaryBlock(type,{value, length});
+}
+
 /** @brief Create a TLV block copying the TLV-VALUE from a raw buffer.
  *  @param type TLV-TYPE number
  *  @param value raw buffer as TLV-VALUE

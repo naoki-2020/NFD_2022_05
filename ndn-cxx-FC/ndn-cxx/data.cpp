@@ -321,7 +321,7 @@ Data::setContent(ConstBufferPtr value)
   return *this;
 }
 
-Data&
+void
 Data::setContent2(const uint8_t* value, size_t valueSize) const
  {
   m_wire.reset();
