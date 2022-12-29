@@ -31,6 +31,7 @@
 
 #include <cstring>
 #include <sstream>
+#include <iostream>
 
 namespace ndn {
 
@@ -40,12 +41,18 @@ BOOST_CONCEPT_ASSERT((WireDecodable<Interest>));
 static_assert(std::is_base_of<tlv::Error, Interest::Error>::value,
               "Interest::Error must inherit from tlv::Error");
 
+//boost::logic::tribool Interest::s_defaultCanBePrefix = boost::logic::indeterminate;
 bool Interest::s_autoCheckParametersDigest = true;
 
 Interest::Interest(const Name& name, time::milliseconds lifetime)
+  : m_function(Name("/"))
 {
   setName(name);
   setInterestLifetime(lifetime);
+
+ // if(!boost::logic::indeterminate(s_defaultCanBePrefix)){
+ //     setCanBePrefix(bool(s_defaultCanBePrefix));
+  //}
 }
 
 Interest::Interest(const Block& wire)
@@ -121,11 +128,13 @@ Interest::wireEncode(EncodingImpl<TAG>& encoder) const
     totalLength += prependEmptyBlock(encoder, tlv::CanBePrefix);
   }
 
+   //Function
+  size_t aaa = getFunction().wireEncode(encoder);
+  totalLength += aaa;
+  std::cout << "This is result of getFunction" + aaa << std::endl;
+
   // Name
   totalLength += getName().wireEncode(encoder);
-
-   //Function
-  totalLength += getFunction().wireEncode(encoder);
 
   totalLength += encoder.prependVarNumber(totalLength);
   totalLength += encoder.prependVarNumber(tlv::Interest);
@@ -157,6 +166,8 @@ Interest::wireDecode(const Block& wire)
     NDN_THROW(Error("Interest", wire.type()));
   }
   m_wire = wire;
+  //auto element_1 = m_wire.elements_begin();
+  //std::cout << *element_1;
   m_wire.parse();
 
   // Interest = INTEREST-TYPE TLV-LENGTH
@@ -170,11 +181,20 @@ Interest::wireDecode(const Block& wire)
   //              [ApplicationParameters [InterestSignature]]
 
   auto element = m_wire.elements_begin();
+  for (int i=0; i < (int)m_wire.elements_size();i++){
+    std::cout << element[i] << std::endl;
+  }
+  
+  auto element3 = m_wire.elements_size();
   if (element == m_wire.elements_end() || element->type() != tlv::Name) {
     NDN_THROW(Error("Name element is missing or out of order"));
   }
   // decode into a temporary object until we determine that the name is valid, in order
   // to maintain class invariants and thus provide a basic form of exception safety
+  //std::cout << *element;
+  
+  std::cout << element3;
+
   Name tempName(*element);
   if (tempName.empty()) {
     NDN_THROW(Error("Name has zero name components"));
@@ -184,8 +204,11 @@ Interest::wireDecode(const Block& wire)
     NDN_THROW(Error("Name has more than one ParametersSha256DigestComponent"));
   }
   m_name = std::move(tempName);
+  
 
   if (++element == m_wire.elements_end() || element->type() != tlv::Name) {
+    //std::cout << element << std::endl;
+    //std::cout << m_wire.elements_end() << std::endl;
     NDN_THROW(Error("Function element is missing or out of order"));
   }
   Name tempFunction(*element);

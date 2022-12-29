@@ -217,7 +217,7 @@ makeBinaryBlock(uint32_t type, span<const uint8_t> value);
 inline Block
 makeBinaryBlock(uint32_t type, const uint8_t* value, size_t length)
 {
-  return makeBinaryBlock(type,{value, length});
+  return makeBinaryBlock(type,span<const uint8_t>{value, length});
 }
 
 /** @brief Create a TLV block copying the TLV-VALUE from a raw buffer.

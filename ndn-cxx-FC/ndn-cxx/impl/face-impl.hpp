@@ -36,6 +36,7 @@
 #include "ndn-cxx/util/logger.hpp"
 #include "ndn-cxx/util/scheduler.hpp"
 #include "ndn-cxx/util/signal.hpp"
+#include <iostream>
 
 NDN_LOG_INIT(ndn.Face);
 // INFO level: prefix registration, etc.
@@ -93,6 +94,11 @@ public: // consumer
     this->ensureConnected(true);
 
     const Interest& interest2 = *interest;
+    auto element = interest2;
+    //for (int i=0; i < length(element);i++){
+    //  std::cout << element[i] << std::endl;
+    //}
+    //std::cout << interest2;
     auto& entry = m_pendingInterestTable.put(id, std::move(interest), afterSatisfied,
                                              afterNacked, afterTimeout, m_scheduler);
 

@@ -99,8 +99,8 @@ Data::wireEncode(EncodingBuffer& encoder, span<const uint8_t> signature) const
 {
   size_t totalLength = encoder.size();
   totalLength += encoder.appendVarNumber(tlv::SignatureValue);
-  //totalLength += encoder.appendVarNumber(signature.size());
-  //totalLength += encoder.appendBytes(signature);
+  totalLength += encoder.appendVarNumber(signature.size());
+  totalLength += encoder.appendBytes(signature);
 
   encoder.prependVarNumber(totalLength);
   encoder.prependVarNumber(tlv::Data);
@@ -322,7 +322,7 @@ Data::setContent(ConstBufferPtr value)
 }
 
 void
-Data::setContent2(const uint8_t* value, size_t valueSize) const
+Data::setContent2(const uint8_t* value, size_t valueSize)
  {
   m_wire.reset();
   m_content = makeBinaryBlock(tlv::Content, value, valueSize);

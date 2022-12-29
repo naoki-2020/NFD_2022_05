@@ -236,7 +236,7 @@ public: // Data fields
   setContent(ConstBufferPtr value);
 
   void
-  setContent2(const uint8_t* value, size_t valueSize) const;
+  setContent2(const uint8_t* value, size_t valueSize) ;
   
   /**
    * @brief Remove the Content element
