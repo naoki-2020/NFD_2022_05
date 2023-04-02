@@ -149,7 +149,7 @@ namespace sfc {
         createFile(outputFilename);
         m_contentBuffer.clear();
         
-       	std::string s = "python3 clientyolo.py " + outputFilename;
+       	std::string s = "python3 build/clientyolo2.py " + outputFilename;
         if (!m_options.isQuiet) 
           std::cout << "outputFilename: " << outputFilename << std::endl;
 

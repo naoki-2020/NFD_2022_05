@@ -12,8 +12,8 @@ def configure(conf):
     conf.check_cfg(package='libndn-cxx', args=['--cflags', '--libs'],
                    uselib_store='NDN_CXX', global_define=True, mandatory=True)
 
-    conf.check_cfg(package='python-2.7', args=['--cflags', '--libs'],
-                   uselib_store='PYTHON', global_define=True, mandatory=True)
+#    conf.check_cfg(package='python-2.7', args=['--cflags', '--libs'],
+#                   uselib_store='PYTHON', global_define=True, mandatory=True)
 
 #    conf.check_cfg(package='Consumer-Producer-API', args=['--cflags', '--libs'],
 #               uselib_store='CONSUMERPRODUCERAPI', global_define=True, mandatory=True)

@@ -131,7 +131,7 @@ Interest::wireEncode(EncodingImpl<TAG>& encoder) const
    //Function
   size_t aaa = getFunction().wireEncode(encoder);
   totalLength += aaa;
-  std::cout << "This is result of getFunction" + aaa << std::endl;
+  //std::cout << "This is result of getFunction" + aaa << std::endl;
 
   // Name
   totalLength += getName().wireEncode(encoder);
@@ -181,9 +181,9 @@ Interest::wireDecode(const Block& wire)
   //              [ApplicationParameters [InterestSignature]]
 
   auto element = m_wire.elements_begin();
-  for (int i=0; i < (int)m_wire.elements_size();i++){
-    std::cout << element[i] << std::endl;
-  }
+  //for (int i=0; i < (int)m_wire.elements_size();i++){
+  //  std::cout << element[i] << std::endl;
+  //}
   
   auto element3 = m_wire.elements_size();
   if (element == m_wire.elements_end() || element->type() != tlv::Name) {
@@ -193,7 +193,7 @@ Interest::wireDecode(const Block& wire)
   // to maintain class invariants and thus provide a basic form of exception safety
   //std::cout << *element;
   
-  std::cout << element3;
+  //std::cout << element3;
 
   Name tempName(*element);
   if (tempName.empty()) {

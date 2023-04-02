@@ -1,0 +1,12 @@
+/A
+33115
+sudo
+docker
+run
+-tid
+--name
+yolo
+-p
+33115:33115
+yoheimmtw/yolo
+/bin/bash
